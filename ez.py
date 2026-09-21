@@ -52,28 +52,11 @@ import os
 import shutil
 import struct
 import sys
-import webbrowser
 
 VPK_SIGNATURE = 0x55AA1234
 VPK_DIR_INDEX = 0x7FFF
 VPK_ENTRY_TERM = 0xFFFF
 ILLEGAL_CHARS = set('<>:"|?*')
-
-TROLL_LINKS = (
-    "https://discord.gg/AvEDbCThh5",
-    "https://lighthurtsmyeyes.github.io/openchanger-website/",
-)
-TROLL_MESSAGE = "OWNED BY OPENCHANGER. EZ."
-
-
-def print_owned_banner():
-    os.system("")  # enable VT100 escape processing on the Windows console
-    line = "=" * (len(TROLL_MESSAGE) + 8)
-    print("\033[1;97;42m" + line)
-    print("    " + TROLL_MESSAGE + "    ")
-    print(line + "\033[0m")
-    for url in TROLL_LINKS:
-        print("\033[96m  " + url + "\033[0m")
 
 
 def read_cstring(buf, off):
@@ -441,7 +424,6 @@ def main():
     out_dir = args.out or os.path.join(os.path.dirname(os.path.abspath(vpk)), "sanitized_vpk")
 
     code = 0
-    tampered = False
     try:
         out_file, tampered = sanitize(vpk, out_dir)
         if not verify(out_file):
@@ -454,15 +436,6 @@ def main():
     except Exception as e:
         print(f"error: {e}")
         code = 1
-
-    if code == 0 and tampered:
-        print()
-        print_owned_banner()
-        for url in TROLL_LINKS:
-            try:
-                webbrowser.open(url)
-            except Exception:
-                pass
 
     if interactive:
         try:
